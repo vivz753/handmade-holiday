@@ -7,8 +7,6 @@ export default async function Play() {
   const user = await getCurrentUser()
   console.log("user", user)
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-green-100 font-sans text-red-500">
-      <Header />
       <main className="flex w-full max-w-3xl flex-1 flex-row items-center gap-10 bg-yellow-50 px-16 py-32 sm:items-start">
         {user ? (
           <Dashboard />
@@ -19,15 +17,9 @@ export default async function Play() {
           </div>
         )}
       </main>
-    </div>
   )
 }
 
 const Dashboard = () => <span>Logged in</span>
 
-const Header = () => (
-  <nav className="absolute top-0 flex h-[100px] w-screen flex-row items-center gap-8 bg-red-400 px-20">
-    <span className="text-yellow-50">FAQ</span>
-    <span className="text-yellow-50">Play!</span>
-  </nav>
-)
+
