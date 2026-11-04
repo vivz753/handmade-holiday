@@ -3,7 +3,7 @@
 import { SignJWT } from "jose"
 import { cookies } from "next/headers"
 import { Pool } from "pg"
-import { validateUser } from "../lib/auth"
+import { validateUser, verifyAuthToken } from "@lib/auth"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -86,4 +86,22 @@ export async function loginUser(prevState: any, formData: FormData) {
       error: "Failed to login user.",
     }
   }
+}
+
+export async function getCurrentUser() {
+  const cookieStore = await cookies()
+
+  const token = cookieStore.get("authToken")?.value
+
+  if (!token) {
+    return null
+  }
+
+  const result = await verifyAuthToken(token)
+
+  if (!result.valid) {
+    return null
+  }
+
+  return result.payload
 }

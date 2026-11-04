@@ -1,4 +1,5 @@
 import { Pool } from "pg"
+import { jwtVerify } from "jose";
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -37,4 +38,24 @@ export async function validateUser(email: string, dob: string) {
   }
 
   return user
+}
+
+export async function verifyAuthToken(token: string) {
+  try {
+    const secret = new TextEncoder().encode(
+      process.env.JWT_SECRET
+    );
+
+    const { payload } = await jwtVerify(token, secret);
+
+    return {
+      valid: true,
+      payload,
+    };
+  } catch {
+    return {
+      valid: false,
+      payload: null,
+    };
+  }
 }
