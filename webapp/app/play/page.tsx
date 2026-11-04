@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { submitUser, submitExistingUser } from "./actions"
+import { createUser, loginUser } from "./actions"
 import { useActionState } from "react"
 
 const inputStyle = "rounded-sm border border-red-400"
@@ -20,7 +20,7 @@ export default function Play() {
 }
 
 const Login = () => {
-  const [state, formAction, isPending] = useActionState(submitExistingUser, initialState)
+  const [state, formAction, isPending] = useActionState(loginUser, initialState)
   return (
     <div className="flex flex-col gap-8 border border-blue-500">
       <span className="text-2xl">Existing player</span>
@@ -52,7 +52,7 @@ const Login = () => {
   )
 }
 const CreateAccount = () => {
-  const [state, formAction, isPending] = useActionState(submitUser, initialState)
+  const [state, formAction, isPending] = useActionState(createUser, initialState)
   return (
     <div className="flex flex-col gap-8 border border-blue-500">
       <span className="text-2xl">New player?</span>

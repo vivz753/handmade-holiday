@@ -1,21 +1,28 @@
 "use server"
 
-import { NextResponse } from "next/server"
+import { SignJWT } from "jose"
+import { cookies } from "next/headers"
+import { Pool } from "pg"
+import { validateUser } from "../lib/auth"
 
-export async function submitUser(prevState: any, formData: FormData) {
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+})
+
+export async function createUser(prevState: any, formData: FormData) {
   const username = formData.get("username")
   const email = formData.get("email")
   const dob = formData.get("dob")
-	
-		if (!formData.get("username")) {
-			return { error: "Username is required" }
-		}
-		if (!formData.get("email")) {
-			return { error: "Email is required" }
-		}
-		if (!formData.get("dob")) {
-			return { error: "Date of birth is required" }
-		}
+
+  if (!formData.get("username")) {
+    return { error: "Username is required" }
+  }
+  if (!formData.get("email")) {
+    return { error: "Email is required" }
+  }
+  if (!formData.get("dob")) {
+    return { error: "Date of birth is required" }
+  }
 
   // Call external endpoint or save to DB
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
@@ -32,34 +39,51 @@ export async function submitUser(prevState: any, formData: FormData) {
   return { message: "User successfully created.", status: true }
 }
 
-export async function submitExistingUser(prevState: any, formData: FormData) {
-  const email = formData.get("email")
-  const dob = formData.get("dob")
-	
-	if (!formData.get("email")) {
-		return { error: "Email is required" }
-	}
-	if (!formData.get("dob")) {
-		return { error: "Date of birth is required" }
-	}
+export async function loginUser(prevState: any, formData: FormData) {
+  try {
+    const email = formData.get("email")?.toString()
+    const dob = formData.get("dob")?.toString()
 
-  // Call external endpoint or save to DB
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/login`, {
-    method: "POST",
-		  body: JSON.stringify({ email, dob }),
-    headers: { "Content-Type": "application/json" },
-  })
+    if (!email) {
+      throw new Error("Email is required")
+    }
 
-	const data = await res.json();
-	console.log('data', data)
+    if (!dob) {
+      throw new Error("Date of birth is required")
+    }
 
+    const user = validateUser(email, dob)
 
-  if (!res.ok) {
-    return { error: "Failed to login user." }
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET)
+
+    const token = await new SignJWT({
+      email,
+    })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("1h")
+      .sign(secret)
+
+    const cookieStore = await cookies()
+
+    cookieStore.set("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60,
+    })
+
+    return {
+      status: true,
+      message: "User logged in successfully.",
+      user,
+    }
+  } catch (error) {
+    console.error(error)
+
+    return {
+      error: "Failed to login user.",
+    }
   }
-	
-	// TODO: set cookie session
-
-  // Return success status and data
-  return { message: "User successfully logged in.", status: true }
 }
