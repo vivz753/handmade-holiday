@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { CreateAccount, Login } from "@components/Login"
-import { getCurrentUser } from "../lib/actions/userActions"
+import { getCurrentUser } from "@lib/auth"
 import { Suspense } from "react"
 
 export default async function Play() {
@@ -21,7 +21,6 @@ export const Loading = () => (
 )
 export const Dashboard = async () => {
   const user = await getCurrentUser()
-  console.log("user", user)
   return (
     <div>
       {user ? (

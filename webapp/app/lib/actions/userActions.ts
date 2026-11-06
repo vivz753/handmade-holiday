@@ -3,8 +3,9 @@
 import { SignJWT } from "jose"
 import { cookies } from "next/headers"
 import { Pool } from "pg"
-import { validateUser, verifyAuthToken } from "@lib/auth"
+import { validateUser } from "@lib/auth"
 import { insertUser } from "./dataActions"
+import { redirect } from "next/navigation"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -35,6 +36,12 @@ export async function createUser(prevState: any, formData: FormData) {
   }
 }
 
+export async function logoutUser() {
+  const cookieStore = await cookies()
+  cookieStore.delete("authToken")
+  redirect("/play")
+}
+
 export async function loginUser(prevState: any, formData: FormData) {
   try {
     const email = formData.get("email")?.toString()
@@ -49,11 +56,12 @@ export async function loginUser(prevState: any, formData: FormData) {
     }
 
     const user = await validateUser(email, dob)
-
     const secret = new TextEncoder().encode(process.env.JWT_SECRET)
 
     const token = await new SignJWT({
+      // These values get included in the JWT payload when decrypted
       email,
+      username: user.username,
     })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
@@ -82,22 +90,4 @@ export async function loginUser(prevState: any, formData: FormData) {
       error: `Failed to login user. ${error}`,
     }
   }
-}
-
-export async function getCurrentUser() {
-  const cookieStore = await cookies()
-
-  const token = cookieStore.get("authToken")?.value
-
-  if (!token) {
-    return null
-  }
-
-  const result = await verifyAuthToken(token)
-
-  if (!result.valid) {
-    return null
-  }
-
-  return result.payload
 }

@@ -2,6 +2,9 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
+import { logoutUser } from "@lib/actions/userActions"
+import { getCurrentUser } from "@lib/auth"
+import { Suspense } from "react"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body>
         <Header />
-        <div className="flex min-h-screen w-full flex-1 flex-col items-center justify-center border bg-green-100 font-sans text-red-500">
+        <div className="flex min-h-screen w-full flex-1 flex-col items-center justify-center bg-green-100 font-sans text-red-500">
           {children}
         </div>
       </body>
@@ -31,14 +34,38 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   )
 }
 
-const Header = () => (
-  <nav className="absolute top-0 flex h-[100px] w-screen flex-row items-center gap-8 bg-red-400 px-20">
-    <span className="text-yellow-50">FAQ</span>
-    <Link href="/play">
-      <span className="text-yellow-50">Play!</span>
-    </Link>
-    <Link href="/api-doc">
-      <span className="text-yellow-50">API</span>
-    </Link>
-  </nav>
-)
+const Header = async () => {
+  return (
+    <nav className="absolute top-0 flex h-[100px] w-screen flex-row items-center gap-8 bg-red-400 px-20">
+      <span className="text-yellow-50">FAQ</span>
+      <Link href="/play">
+        <span className="text-yellow-50">Play!</span>
+      </Link>
+      <Link href="/api-doc">
+        <span className="text-yellow-50">API</span>
+      </Link>
+      <Suspense fallback={<span>Loading...</span>}>
+        <LoginStatus />
+      </Suspense>
+    </nav>
+  )
+}
+
+const LoginStatus = async () => {
+  const user = await getCurrentUser()
+  if (!user) return null
+  return (
+    <>
+      {user ? (
+        <>
+          <span className="ml-auto">{user.username}</span>
+          <form action={logoutUser}>
+            <button type="submit">Log out</button>
+          </form>
+        </>
+      ) : (
+        <></>
+      )}
+    </>
+  )
+}
