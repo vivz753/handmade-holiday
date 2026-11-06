@@ -1,21 +1,39 @@
 import { NextResponse, NextRequest } from "next/server"
 import { Pool } from "pg"
+import { insertUser, getUsers } from "@lib/actions/dataActions"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 })
 
-// Get Users
-export async function GET() {
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Retrieves a new user
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         description: Filter by email
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: string
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+export async function GET(_req: NextRequest) {
+  const email = _req.nextUrl.searchParams.get("email")
+
   try {
-    const result = await pool.query(`SELECT id, username, email FROM "Users"`)
-    return NextResponse.json(result.rows, { status: 200 })
+    const users = await getUsers(email)
+    return NextResponse.json(users, { status: 200 })
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 })
   }
 }
 
-// Create User
 /**
  * @swagger
  * /api/users:
@@ -41,28 +59,15 @@ export async function GET() {
  *         description: Success
  */
 export async function POST(_req: NextRequest) {
-  let client
   try {
     // Parse raw JSON from request body
     const { username, email, dob } = await _req.json()
 
-    // Connect to database
-    client = await pool.connect()
+    const user = await insertUser(username, email, dob)
 
-    // Execute INSERT query directly with values from body
-    // Note: Use parameterized queries ($1, $2) to prevent SQL injection,
-    // even if "no filter" is requested, direct string concatenation is unsafe.
-    const result = await client.query(`INSERT INTO "Users" (username, email, dob) VALUES ($1, $2, $3) RETURNING *`, [
-      username,
-      email,
-      dob,
-    ])
-
-    return NextResponse.json({ message: "User created successfully", user: result.rows[0] }, { status: 201 })
+    return NextResponse.json({ message: "User created successfully", user }, { status: 201 })
   } catch (error) {
     console.error("Error creating user:", error)
     return NextResponse.json({ error: "Failed to create user" }, { status: 500 })
-  } finally {
-    if (client) client.release()
   }
 }

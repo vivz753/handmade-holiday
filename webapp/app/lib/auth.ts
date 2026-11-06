@@ -1,3 +1,5 @@
+"use server"
+
 import { Pool } from "pg"
 import { jwtVerify } from "jose";
 
@@ -36,7 +38,6 @@ export async function validateUser(email: string, dob: string) {
   if (user.dob !== dob) {
     throw new Error("Invalid date of birth")
   }
-
   return user
 }
 

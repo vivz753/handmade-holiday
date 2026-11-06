@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 
@@ -20,10 +21,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <div className="flex flex-1 flex-col items-center justify-center bg-green-100 font-sans text-red-500">
+      <body>
         <Header />
-        <body className="flex min-h-full flex-col">{children}</body>
-      </div>
+        <div className="flex min-h-screen w-full flex-1 flex-col items-center justify-center border bg-green-100 font-sans text-red-500">
+          {children}
+        </div>
+      </body>
     </html>
   )
 }
@@ -31,6 +34,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 const Header = () => (
   <nav className="absolute top-0 flex h-[100px] w-screen flex-row items-center gap-8 bg-red-400 px-20">
     <span className="text-yellow-50">FAQ</span>
-    <span className="text-yellow-50">Play!</span>
+    <Link href="/play">
+      <span className="text-yellow-50">Play!</span>
+    </Link>
+    <Link href="/api-doc">
+      <span className="text-yellow-50">API</span>
+    </Link>
   </nav>
 )

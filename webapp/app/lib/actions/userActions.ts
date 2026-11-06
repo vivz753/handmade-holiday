@@ -4,39 +4,35 @@ import { SignJWT } from "jose"
 import { cookies } from "next/headers"
 import { Pool } from "pg"
 import { validateUser, verifyAuthToken } from "@lib/auth"
+import { insertUser } from "./dataActions"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 })
 
 export async function createUser(prevState: any, formData: FormData) {
-  const username = formData.get("username")
-  const email = formData.get("email")
-  const dob = formData.get("dob")
+  const username = String(formData.get("username") ?? "").trim()
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase()
+  const dob = String(formData.get("dob") ?? "")
 
-  if (!formData.get("username")) {
-    return { error: "Username is required" }
+  if (!username || !email || !dob) {
+    return { status: false, message: "All fields are required." }
   }
-  if (!formData.get("email")) {
-    return { error: "Email is required" }
-  }
-  if (!formData.get("dob")) {
-    return { error: "Date of birth is required" }
-  }
+  try {
+    // Call external endpoint or save to DB
+    await insertUser({ username, email, dob })
 
-  // Call external endpoint or save to DB
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
-    method: "POST",
-    body: JSON.stringify({ username, email, dob }),
-    headers: { "Content-Type": "application/json" },
-  })
+    // Return success status and data
+    return { message: "User successfully created.", status: true }
+  } catch (error) {
+    console.error(error)
 
-  if (!res.ok) {
-    return { error: "Failed to create user." }
+    return {
+      error: `Failed to create user. ${error}`,
+    }
   }
-
-  // Return success status and data
-  return { message: "User successfully created.", status: true }
 }
 
 export async function loginUser(prevState: any, formData: FormData) {
@@ -52,7 +48,7 @@ export async function loginUser(prevState: any, formData: FormData) {
       throw new Error("Date of birth is required")
     }
 
-    const user = validateUser(email, dob)
+    const user = await validateUser(email, dob)
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET)
 
@@ -83,7 +79,7 @@ export async function loginUser(prevState: any, formData: FormData) {
     console.error(error)
 
     return {
-      error: "Failed to login user.",
+      error: `Failed to login user. ${error}`,
     }
   }
 }
