@@ -1,12 +1,47 @@
-"use server"
+"server only"
 
 import { Pool } from "pg"
+import { Profile } from "@lib/types"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 })
 
-export const getUsers = async (email?: string) => {
+// public function
+export const getPublicUsers = async (email?: string) => {
+  let result
+
+  if (email) {
+    // Query by email if provided
+    result = await pool.query(
+      `SELECT
+      username,
+      making,
+      seeking,
+      likes,
+      dislikes
+      FROM "Users"
+      WHERE email = $1`,
+      [email],
+    )
+  } else {
+    // Return all users if email is not provided
+    result = await pool.query(`
+      SELECT
+      username,
+      making,
+      seeking,
+      likes,
+      dislikes
+      FROM "Users"
+      `)
+  }
+
+  return result.rows
+}
+
+// confidential user info
+export const getConfidentialUsers = async (email?: string) => {
   let result
 
   if (email) {
@@ -15,6 +50,10 @@ export const getUsers = async (email?: string) => {
       `SELECT
       email,
       username,
+      making,
+      seeking,
+      likes,
+      dislikes,
       TO_CHAR(dob, 'YYYY-MM-DD') AS dob
       FROM "Users"
       WHERE email = $1`,
@@ -26,6 +65,10 @@ export const getUsers = async (email?: string) => {
       SELECT
       email,
       username,
+      making,
+      seeking,
+      likes,
+      dislikes,
       TO_CHAR(dob, 'YYYY-MM-DD') AS dob
       FROM "Users"
       `)
@@ -33,6 +76,26 @@ export const getUsers = async (email?: string) => {
 
   return result.rows
 }
+
+// TODO: If your table has an id column, use WHERE id = $8 and put id in the JWT. Keying on email breaks other active sessions the moment someone changes their email.
+export async function updateUser(currentEmail: string, p: Profile) {
+  const result = await pool.query(
+    `UPDATE "Users"
+     SET username = $1,
+         email    = $2,
+         dob      = $3,
+         likes    = $4,
+         dislikes = $5,
+         making   = $6,
+         seeking  = $7
+     WHERE email = $8
+     RETURNING username, email`,
+    [p.username, p.email, p.dob, p.likes, p.dislikes, p.making, p.seeking, currentEmail],
+  )
+  return result.rows[0] ?? null // null means no row matched
+}
+
+
 
 export type NewUser = { username: string; email: string; dob: string }
 export const insertUser = async ({ username, email, dob }: NewUser) => {

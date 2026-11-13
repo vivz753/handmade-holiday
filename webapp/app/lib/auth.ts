@@ -2,8 +2,8 @@ import "server-only"
 
 import { Pool } from "pg"
 import { jwtVerify } from "jose"
-import { getUsers } from "@lib/actions/dataActions"
 import { cookies } from "next/headers"
+import { getConfidentialUsers } from "./actions/dataActions"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -25,7 +25,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 
 export async function validateUser(email: string, dob: string) {
   try {
-    const users = await getUsers(email)
+    const users = await getConfidentialUsers(email)
     if (users.length === 0) {
       throw new Error("User not found")
     }
@@ -53,6 +53,7 @@ export async function verifyAuthToken(token: string) {
 
     return {
       valid: true,
+      // These values get returned when the JWT is verified
       payload: { email: payload.email, username: payload.username } satisfies SessionUser,
     }
   } catch {

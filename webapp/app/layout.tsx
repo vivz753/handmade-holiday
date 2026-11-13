@@ -37,7 +37,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 const Header = async () => {
   return (
     <nav className="absolute top-0 flex h-[100px] w-screen flex-row items-center gap-8 bg-red-400 px-20">
+      <Link href="/">
       <span className="text-yellow-50">FAQ</span>
+      </Link>
       <Link href="/play">
         <span className="text-yellow-50">Play!</span>
       </Link>
@@ -59,6 +61,9 @@ const LoginStatus = async () => {
       {user ? (
         <>
           <span className="ml-auto">{user.username}</span>
+          <Link href="/profile">
+            <span className="text-yellow-50">Profile</span>
+          </Link>
           <form action={logoutUser}>
             <button type="submit">Log out</button>
           </form>

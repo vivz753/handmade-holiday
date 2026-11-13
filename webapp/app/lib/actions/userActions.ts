@@ -3,13 +3,66 @@
 import { SignJWT } from "jose"
 import { cookies } from "next/headers"
 import { Pool } from "pg"
-import { validateUser } from "@lib/auth"
-import { insertUser } from "./dataActions"
+import { validateUser, getCurrentUser } from "@lib/auth"
+import { insertUser, updateUser } from "./dataActions"
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 })
+
+const text = (fd: FormData, key: string) => String(fd.get(key) ?? "").trim()
+const optional = (fd: FormData, key: string) => text(fd, key).slice(0, 500) || null
+
+export async function editUser(prevState: unknown, formData: FormData) {
+  const session = await getCurrentUser()
+  if (!session) return { error: "Not logged in.", success: false }
+
+  const username = text(formData, "username")
+  const email = text(formData, "email").toLowerCase()
+  const dob = text(formData, "dob")
+
+  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) return { error: "Invalid username.", success: false }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Invalid email.", success: false }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dob)) return { error: "Invalid date of birth.", success: false }
+
+  try {
+    const updated = await updateUser(session.email, {
+      username,
+      email,
+      dob,
+      likes: optional(formData, "likes"),
+      dislikes: optional(formData, "dislikes"),
+      making: optional(formData, "making"),
+      seeking: optional(formData, "seeking"),
+    })
+    if (!updated) return { error: "Profile not found.", success: false }
+
+    // The JWT holds username/email, so reissue it with the new values
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET)
+    const token = await new SignJWT({ email: updated.email, username: updated.username })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("1h")
+      .sign(secret)
+
+    ;(await cookies()).set("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60,
+    })
+
+    revalidatePath("/profile")
+    return { error: null, success: true }
+  } catch (e: any) {
+    console.error(e)
+    if (e?.code === "23505") return { error: "That username or email is already taken.", success: false }
+    return { error: "Failed to update profile.", success: false }
+  }
+}
 
 export async function createUser(prevState: any, formData: FormData) {
   const username = String(formData.get("username") ?? "").trim()

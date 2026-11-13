@@ -1,8 +1,8 @@
-import Image from "next/image"
 import { CreateAccount, Login } from "@components/Login"
+import { Loading } from "@components/Loading"
 import { getCurrentUser } from "@lib/auth"
 import { Suspense } from "react"
-import { getUsers } from "@lib/actions/dataActions"
+import { getPublicUsers } from "@lib/actions/dataActions"
 
 export default async function Play() {
   return (
@@ -14,12 +14,6 @@ export default async function Play() {
   )
 }
 
-export const Loading = () => (
-  <div className="flex h-full flex-col items-center justify-center gap-4">
-    <Image alt="Loading..." width={150} height={150} src="christmas-2-svgrepo-com.svg" className="animate-pulse" />
-    <span className="animate-pulse text-xl text-green-300">Loading...</span>
-  </div>
-)
 export const Dashboard = async () => {
   const user = await getCurrentUser()
   return (
@@ -41,7 +35,7 @@ export const Dashboard = async () => {
 }
 
 const Board = async () => {
-  const players = await getUsers()
+  const players = await getPublicUsers()
   console.log("players", players)
   return (
     <div className="h-[800px] max-h-[80vh] p-1">
@@ -58,10 +52,10 @@ const Board = async () => {
           {players.map((p) => (
             <div className="grid grid-cols-5 items-center divide-x" key={p.username}>
               {/* <div className="truncate p-1 whitespace-pre-wrap">{p.email}</div> */}
-              <div className="p-1">{p.username}</div>
-              <div className="h-full p-0">{p.making}</div>
-              <div className="h-full p-0">{p.seeking}</div>
-              <div className="h-full p-0">{p.likes}</div>
+              <div className="h-full p-1">{p.username}</div>
+              <div className="h-full p-1">{p.making}</div>
+              <div className="h-full p-1">{p.seeking}</div>
+              <div className="h-full p-1">{p.likes}</div>
               <div className="h-full p-1">{p.dislikes}</div>
               {/* <div className="p-1 tabular-nums">{p.dob}</div> */}
             </div>

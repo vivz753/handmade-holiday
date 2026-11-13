@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server"
 import { Pool } from "pg"
-import { insertUser, getUsers } from "@lib/actions/dataActions"
+import { insertUser, getPublicUsers } from "@lib/actions/dataActions"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -27,7 +27,7 @@ export async function GET(_req: NextRequest) {
   const email = _req.nextUrl.searchParams.get("email")
 
   try {
-    const users = await getUsers(email)
+    const users = await getPublicUsers(email)
     return NextResponse.json(users, { status: 200 })
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 })

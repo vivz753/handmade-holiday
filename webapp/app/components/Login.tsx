@@ -17,12 +17,12 @@ export const Login = () => {
 						<input required className={inputStyle} name="username" type="string" />
 					</div> */}
           <div className="flex flex-col">
-            <label id="email">Email</label>
-            <input required className={inputStyle} name="email" type="email" />
+            <label htmlFor="email">Email</label>
+            <input id="email" required className={inputStyle} name="email" type="email" />
           </div>
           <div className="flex flex-col">
-            <label id="dob">Date of Birth</label>
-            <input required className={inputStyle} name="dob" type="date" />
+            <label htmlFor="dob">Date of Birth</label>
+            <input id="dob" required className={inputStyle} name="dob" type="date" />
           </div>
           <button className="mt-auto rounded-lg bg-red-500 p-2 text-yellow-100" type="submit" disabled={isPending}>
             {isPending ? "Loading..." : "Log In"}
@@ -60,12 +60,20 @@ export const CreateAccount = () => {
             />
           </div>
           <div className="flex flex-col">
-            <label id="email">Email</label>
-            <input required autoComplete="email" maxLength={254} className={inputStyle} name="email" type="email" />
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              required
+              autoComplete="email"
+              maxLength={254}
+              className={inputStyle}
+              name="email"
+              type="email"
+            />
           </div>
           <div className="flex flex-col">
-            <label id="dob">Date of Birth</label>
-            <input required className={inputStyle} name="dob" type="date" />
+            <label htmlFor="dob">Date of Birth</label>
+            <input id="dob" required className={inputStyle} name="dob" type="date" />
           </div>
           <button className="mt-8 rounded-lg bg-red-500 p-2 text-yellow-100" type="submit" disabled={isPending}>
             {isPending ? "Loading..." : "Create Account"}
