@@ -1,11 +1,11 @@
 export default function Home() {
   return (
-    <main className="flex w-full max-w-3xl flex-1 flex-col items-center justify-between bg-yellow-50 px-8 py-32 sm:items-start lg:px-16">
-      <div className="flex flex-col gap-4">
+    <main className="flex w-full max-w-3xl flex-1 flex-col items-center justify-between bg-yellow-50 px-8 py-16 pt-[100px] sm:items-start lg:px-16">
+      <div className="flex flex-col gap-4 pt-8">
         <span className="text-3xl">Handmade Holiday</span>
         <span className="text-2xl">Purpose</span>
         <span className="text-red-500">
-          Create something of your own to enter the pool of holiday gift giving (and gambling)!
+          Create something original to enter the pool of holiday gift giving (and gambling)!
         </span>
         <span className="text-2xl">How it works</span>
         <span className="text-xl">Crafting</span>
@@ -21,34 +21,36 @@ export default function Home() {
           objects, paper
         </span>
         <span className="text-xl">Examples</span>
-        <ul className="list-disc">
-          <span>3D</span>
-          <li>Ceramic mug</li>
-          <li>Painted figurine</li>
-          <li>Felted animal plushies</li>
-          <li>Knitted beanie</li>
-          <li>Sewn Pillowcase</li>
-          <li>Mosaic coaster</li>
-          <li>Wooden carved toy</li>
-          <li>Embroidered handkerchief</li>
-          <li>Notebook decorated w/ stickers</li>
-          <li>Bedazzled container</li>
-          <li>Soap or candle</li>
-          <li>Jewelry</li>
-        </ul>
-        <ul className="list-disc">
-          <span>2D</span>
-          <li>Painting</li>
-          <li>Fan-art</li>
-          <li>Greeting card</li>
-          <li>Sticker</li>
-          <li>Photographs</li>
-          <li>Short story</li>
-          <li>Booklet of poems</li>
-          <li>Fan-fiction</li>
-          <li>Sheet music</li>
-          <li>CD recording</li>
-        </ul>
+        <div className="flex flex-row gap-4 lg:gap-12">
+          <ul className="list-disc">
+            <span>3D</span>
+            <li>Ceramic mug</li>
+            <li>Painted figurine</li>
+            <li>Felted animal plushies</li>
+            <li>Knitted beanie</li>
+            <li>Sewn Pillowcase</li>
+            <li>Mosaic coaster</li>
+            <li>Wooden carved toy</li>
+            <li>Embroidered handkerchief</li>
+            <li>Notebook decorated w/ stickers</li>
+            <li>Bedazzled container</li>
+            <li>Soap or candle</li>
+            <li>Jewelry</li>
+          </ul>
+          <ul className="list-disc">
+            <span>2D</span>
+            <li>Painting</li>
+            <li>Fan-art</li>
+            <li>Greeting card</li>
+            <li>Sticker</li>
+            <li>Photographs</li>
+            <li>Short story</li>
+            <li>Booklet of poems</li>
+            <li>Fan-fiction</li>
+            <li>Sheet music</li>
+            <li>CD recording</li>
+          </ul>
+        </div>
         <span className="text-xl">Rules</span>
         <ol className="list-decimal">
           <li>Item must be functional OR serve an aesthetic purpose. Ideally both!</li>
