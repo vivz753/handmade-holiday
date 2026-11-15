@@ -2,8 +2,8 @@
 import { User } from "@lib/types"
 import { useActionState } from "react"
 import { editUser } from "@lib/actions/userActions"
+import { inputStyle, buttonStyle } from "@lib/styles"
 
-const inputStyle = "p-1 rounded-sm border border-red-400 disabled:opacity-50"
 const initialState = { error: null, success: false }
 export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
   const [state, formAction, isPending] = useActionState(editUser, initialState)
@@ -110,11 +110,7 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
                     name="dislikes"
                   />
                 </div>
-                <button
-                  className="mt-8 cursor-pointer rounded-lg bg-red-500 p-2 text-yellow-100"
-                  type="submit"
-                  disabled={isPending}
-                >
+                <button className={buttonStyle} type="submit" disabled={isPending}>
                   {isPending ? "Loading..." : "Update Profile"}
                 </button>
                 {state?.error && <p style={{ color: "red" }}>{state.error}</p>}{" "}

@@ -1,14 +1,14 @@
 "use client"
 import { useActionState } from "react"
 import { createUser, loginUser } from "@lib/actions/userActions"
+import { inputStyle, buttonStyle } from "@lib/styles"
 
-const inputStyle = "p-1 rounded-sm border border-red-400"
 const initialState = { error: null, success: false }
 
 export const Login = () => {
   const [state, formAction, isPending] = useActionState(loginUser, initialState)
   return (
-    <div className="flex flex-col gap-8 rounded-lg bg-green-100 px-12 py-10 text-red-500">
+    <div className="flex flex-col gap-8 rounded-lg border-2 border-green-200 px-12 py-10 text-red-500">
       <span className="text-2xl">Existing player</span>
       <form className="flex h-full" action={formAction}>
         <div className="flex flex-col gap-4">
@@ -24,7 +24,7 @@ export const Login = () => {
             <label htmlFor="dob">Date of Birth</label>
             <input id="dob" required className={inputStyle} name="dob" type="date" />
           </div>
-          <button className="mt-auto rounded-lg bg-red-500 p-2 text-yellow-100" type="submit" disabled={isPending}>
+          <button className={buttonStyle} type="submit" disabled={isPending}>
             {isPending ? "Loading..." : "Log In"}
           </button>
           {state?.error && <p style={{ color: "red" }}>{state.error}</p>}
@@ -38,8 +38,8 @@ export const Login = () => {
 export const CreateAccount = () => {
   const [state, formAction, isPending] = useActionState(createUser, initialState)
   return (
-    <div className="flex flex-col gap-8 rounded-lg bg-green-100 px-12 py-10 text-red-500">
-      <span className="text-2xl">New player?</span>
+    <div className="flex flex-col gap-8 rounded-lg border border-red-500 px-12 py-10 text-red-500">
+      <span className="text-2xl">New player</span>
       <form className="flex h-full" action={formAction}>
         <div className="flex flex-col gap-4">
           <div className="flex flex-col">
@@ -72,7 +72,7 @@ export const CreateAccount = () => {
             <label htmlFor="dob">Date of Birth</label>
             <input id="dob" required className={inputStyle} name="dob" type="date" />
           </div>
-          <button className="mt-8 rounded-lg bg-red-500 p-2 text-yellow-100" type="submit" disabled={isPending}>
+          <button className={buttonStyle} type="submit" disabled={isPending}>
             {isPending ? "Loading..." : "Create Account"}
           </button>
           {state?.error && <p style={{ color: "red" }}>{state.error}</p>}

@@ -23,11 +23,11 @@ export const Dashboard = async () => {
       {user ? (
         <div className="pt-4">
           <span className="text-2xl">Player Board</span>
-          <Board username={user.username} />
+          <Board username={user.username} email={user.email} />
           <span className="absolute bottom-0">{`Logged in as ${user?.email}`}</span>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center gap-10 lg:flex-row py-8">
+        <div className="flex flex-col items-center justify-center gap-10 py-8 lg:flex-row">
           <CreateAccount />
           <Login />
         </div>
@@ -36,14 +36,14 @@ export const Dashboard = async () => {
   )
 }
 
-const Board: React.FC<{ username: string }> = async ({ username }) => {
-  const players = await getPublicUsers()
+const Board: React.FC<{ username: string; email: string }> = async ({ username, email }) => {
+  const players = await getPublicUsers(email)
   console.log("players", players)
   return (
     <div className="max-h-[80vh] text-sm lg:text-base">
       {/* HEADER */}
       <div className="h-full divide-y divide-red-400 overflow-auto rounded-lg border">
-        <div className="sticky top-0 grid w-full grid-cols-5 items-center divide-x divide-red-400 text-green-200 lg:px-2">
+        <div className="sticky top-0 grid w-full grid-cols-5 items-center divide-x divide-red-400 text-green-300 lg:px-2">
           <div className="p-1 lg:p-2">Player</div>
           <div className="p-1 lg:p-2">Making</div>
           <div className="p-1 lg:p-2">Seeking</div>

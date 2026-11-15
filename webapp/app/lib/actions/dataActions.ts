@@ -21,7 +21,9 @@ export const getPublicUsers = async (email?: string) => {
       likes,
       dislikes
       FROM "Users"
-      WHERE email = $1`,
+            ORDER BY
+        CASE WHEN email = $1 THEN 0 ELSE 1 END ASC,
+        email ASC`,
       [email],
     )
   } else {
@@ -40,14 +42,9 @@ export const getPublicUsers = async (email?: string) => {
   return result.rows
 }
 
-// confidential user info
-export const getConfidentialUsers = async (email?: string) => {
-  let result
-
-  if (email) {
-    // Query by email if provided
-    result = await pool.query(
-      `SELECT
+export const getConfidentialUserByEmail = async (email: string) => {
+  const result = await pool.query(
+    `SELECT
       email,
       username,
       making,
@@ -57,23 +54,8 @@ export const getConfidentialUsers = async (email?: string) => {
       TO_CHAR(dob, 'YYYY-MM-DD') AS dob
       FROM "Users"
       WHERE email = $1`,
-      [email],
-    )
-  } else {
-    // Return all users if email is not provided
-    result = await pool.query(`
-      SELECT
-      email,
-      username,
-      making,
-      seeking,
-      likes,
-      dislikes,
-      TO_CHAR(dob, 'YYYY-MM-DD') AS dob
-      FROM "Users"
-      `)
-  }
-
+    [email],
+  )
   return result.rows
 }
 

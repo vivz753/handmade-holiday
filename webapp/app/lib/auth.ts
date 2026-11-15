@@ -3,7 +3,7 @@ import "server-only"
 import { Pool } from "pg"
 import { jwtVerify } from "jose"
 import { cookies } from "next/headers"
-import { getConfidentialUsers } from "./actions/dataActions"
+import { getConfidentialUserByEmail } from "./actions/dataActions"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -24,7 +24,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 }
 
 export async function validateUser(email: string, dob: string) {
-  const users = await getConfidentialUsers(email)
+  const users = await getConfidentialUserByEmail(email)
   const user = users[0]
 
   if (!user || user.dob !== dob) return null
