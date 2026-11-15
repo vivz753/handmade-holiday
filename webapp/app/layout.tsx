@@ -36,16 +36,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
 const Header = async () => {
   return (
-    <nav className="absolute top-0 flex h-[100px] w-screen flex-row items-center gap-8 bg-red-400 px-20">
+    <nav className="absolute top-0 flex h-[100px] w-screen flex-row items-center gap-8 bg-red-400 p-8 md:px-20">
       <Link href="/">
-      <span className="text-yellow-50">FAQ</span>
+        <span className="text-yellow-50">FAQ</span>
       </Link>
       <Link href="/play">
         <span className="text-yellow-50">Play!</span>
       </Link>
-      <Link href="/api-doc">
+      {/* <Link href="/api-doc">
         <span className="text-yellow-50">API</span>
-      </Link>
+      </Link> */}
       <Suspense fallback={<span>Loading...</span>}>
         <LoginStatus />
       </Suspense>
@@ -59,15 +59,17 @@ const LoginStatus = async () => {
   return (
     <>
       {user ? (
-        <>
-          <span className="ml-auto">{user.username}</span>
-          <Link href="/profile">
-            <span className="text-yellow-50">Profile</span>
+        <div className="flex w-full flex-row gap-8">
+          {/* <span className="ml-auto">{user.username}</span> */}
+          <Link className="mr-auto" href="/edit">
+            <span className="text-yellow-50">Edit Profile</span>
           </Link>
-          <form action={logoutUser}>
-            <button type="submit">Log out</button>
+          <form className="ml-auto" action={logoutUser}>
+            <button className="cursor-pointer" type="submit">
+              Log out
+            </button>
           </form>
-        </>
+        </div>
       ) : (
         <></>
       )}

@@ -82,20 +82,16 @@ export async function updateUser(currentEmail: string, p: Profile) {
   const result = await pool.query(
     `UPDATE "Users"
      SET username = $1,
-         email    = $2,
-         dob      = $3,
-         likes    = $4,
-         dislikes = $5,
-         making   = $6,
-         seeking  = $7
-     WHERE email = $8
+         likes    = $2,
+         dislikes = $3,
+         making   = $4,
+         seeking  = $5
+     WHERE email = $6
      RETURNING username, email`,
-    [p.username, p.email, p.dob, p.likes, p.dislikes, p.making, p.seeking, currentEmail],
+    [p.username, p.likes, p.dislikes, p.making, p.seeking, currentEmail],
   )
   return result.rows[0] ?? null // null means no row matched
 }
-
-
 
 export type NewUser = { username: string; email: string; dob: string }
 export const insertUser = async ({ username, email, dob }: NewUser) => {

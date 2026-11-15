@@ -3,10 +3,12 @@ import { Loading } from "@components/Loading"
 import { getCurrentUser } from "@lib/auth"
 import { Suspense } from "react"
 import { getPublicUsers } from "@lib/actions/dataActions"
+import { MdEdit } from "react-icons/md"
+import Link from "next/link"
 
 export default async function Play() {
   return (
-    <div className="flex w-full max-w-3xl flex-1 flex-row items-center justify-center gap-10 bg-yellow-50 px-10 pt-[100px]">
+    <div className="flex w-full max-w-3xl flex-1 flex-row justify-center gap-10 bg-yellow-50 px-10 pt-[100px]">
       <Suspense fallback={<Loading />}>
         <Dashboard />
       </Suspense>
@@ -19,13 +21,13 @@ export const Dashboard = async () => {
   return (
     <>
       {user ? (
-        <div className="">
+        <div className="pt-4">
           <span className="text-2xl">Player Board</span>
-          <Board />
-          <span className="absolute bottom-0 text-black">{`Logged in as ${user?.email}`}</span>
+          <Board username={user.username} />
+          <span className="absolute bottom-0">{`Logged in as ${user?.email}`}</span>
         </div>
       ) : (
-        <div className="flex flex-col gap-10 lg:flex-row">
+        <div className="flex flex-col items-center justify-center gap-10 border lg:flex-row">
           <CreateAccount />
           <Login />
         </div>
@@ -34,30 +36,34 @@ export const Dashboard = async () => {
   )
 }
 
-const Board = async () => {
+const Board = async ({ username }) => {
   const players = await getPublicUsers()
   console.log("players", players)
   return (
-    <div className="h-[800px] max-h-[80vh] p-1">
-      <div className="divide-y divide-red-400 rounded-2xl border p-2">
-        <div className="grid grid-cols-5 items-center divide-x divide-red-400 text-green-200">
-          <div className="p-1">Username</div>
-          <div className="p-1">Making</div>
-          <div className="p-1">Seeking</div>
-          <div className="p-1">Likes</div>
-          <div className="p-1">Dislikes</div>
-          {/* <div className="p-1 tabular-nums">dob</div> */}
+    <div className="max-h-[80vh] p-1">
+      <div className="h-full divide-y divide-red-400 overflow-auto rounded-2xl border">
+        <div className="sticky top-0 grid w-full grid-cols-5 items-center divide-x divide-red-400 px-2 text-green-200">
+          <div className="p-2">Username</div>
+          <div className="p-2">Making</div>
+          <div className="p-2">Seeking</div>
+          <div className="p-2">Likes</div>
+          <div className="p-2">Dislikes</div>
         </div>
         <ul className="divide-y divide-red-400">
           {players.map((p) => (
-            <div className="grid grid-cols-5 items-center divide-x" key={p.username}>
-              {/* <div className="truncate p-1 whitespace-pre-wrap">{p.email}</div> */}
-              <div className="h-full p-1">{p.username}</div>
-              <div className="h-full p-1">{p.making}</div>
-              <div className="h-full p-1">{p.seeking}</div>
-              <div className="h-full p-1">{p.likes}</div>
-              <div className="h-full p-1">{p.dislikes}</div>
-              {/* <div className="p-1 tabular-nums">{p.dob}</div> */}
+            <div className="grid grid-cols-5 items-center divide-x px-2" key={p.username}>
+              <div className="flex h-full flex-row gap-2 p-2">
+                {p.username}
+                {username === p.username && (
+                  <Link href="/edit">
+                    <MdEdit className="h-5 w-5" />
+                  </Link>
+                )}
+              </div>
+              <div className="h-full p-2 wrap-anywhere">{p.making}</div>
+              <div className="h-full p-2">{p.seeking}</div>
+              <div className="h-full p-2">{p.likes}</div>
+              <div className="h-full p-2">{p.dislikes}</div>
             </div>
           ))}
         </ul>

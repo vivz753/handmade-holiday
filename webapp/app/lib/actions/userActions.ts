@@ -13,25 +13,32 @@ const pool = new Pool({
 })
 
 const text = (fd: FormData, key: string) => String(fd.get(key) ?? "").trim()
-const optional = (fd: FormData, key: string) => text(fd, key).slice(0, 500) || null
+const optional = (fd: FormData, key: string) => text(fd, key).slice(0, 200) || null
 
 export async function editUser(prevState: unknown, formData: FormData) {
   const session = await getCurrentUser()
   if (!session) return { error: "Not logged in.", success: false }
+  console.log("formData", formData)
 
   const username = text(formData, "username")
-  const email = text(formData, "email").toLowerCase()
-  const dob = text(formData, "dob")
+  // const email = text(formData, "email").toLowerCase()
+  // const dob = text(formData, "dob")
+  const making = text(formData, "making")
+  const seeking = text(formData, "seeking")
+  const likes = text(formData, "likes")
+  const dislikes = text(formData, "dislikes")
 
   if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) return { error: "Invalid username.", success: false }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Invalid email.", success: false }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dob)) return { error: "Invalid date of birth.", success: false }
+  // if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Invalid email.", success: false }
+  // if (!/^\d{4}-\d{2}-\d{2}$/.test(dob)) return { error: "Invalid date of birth.", success: false }
+  if (making.length > 200 || seeking.length > 200 || likes.length > 200 || dislikes.length > 200)
+    return { error: "Text must be 200 characters or fewer.", success: false }
 
   try {
     const updated = await updateUser(session.email, {
       username,
-      email,
-      dob,
+      // email,
+      // dob,
       likes: optional(formData, "likes"),
       dislikes: optional(formData, "dislikes"),
       making: optional(formData, "making"),
@@ -41,13 +48,17 @@ export async function editUser(prevState: unknown, formData: FormData) {
 
     // The JWT holds username/email, so reissue it with the new values
     const secret = new TextEncoder().encode(process.env.JWT_SECRET)
-    const token = await new SignJWT({ email: updated.email, username: updated.username })
+    const token = await new SignJWT({
+      email: updated.email,
+      username: updated.username,
+    })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("1h")
       .sign(secret)
 
-    ;(await cookies()).set("authToken", token, {
+    const cookieStore = await cookies()
+    cookieStore.set("authToken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -55,7 +66,7 @@ export async function editUser(prevState: unknown, formData: FormData) {
       maxAge: 60 * 60,
     })
 
-    revalidatePath("/profile")
+    revalidatePath("/edit")
     return { error: null, success: true }
   } catch (e: any) {
     console.error(e)
@@ -122,7 +133,6 @@ export async function loginUser(prevState: any, formData: FormData) {
       .sign(secret)
 
     const cookieStore = await cookies()
-
     cookieStore.set("authToken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
