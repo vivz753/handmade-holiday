@@ -55,7 +55,7 @@ export async function editUser(prevState: unknown, formData: FormData) {
     })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setExpirationTime("1h")
+      .setExpirationTime("7d")
       .sign(secret)
 
     const cookieStore = await cookies()
@@ -64,14 +64,14 @@ export async function editUser(prevState: unknown, formData: FormData) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60,
+      maxAge: 60 * 60 * 24 * 7, // 1 week
     })
 
     revalidatePath("/edit")
     return { error: null, success: true }
   } catch (e: any) {
     console.error(e)
-    if (e?.code === "23505") return { error: "That username or email is already taken.", success: false }
+    if (e?.code === "23505") return { error: "That username is already taken.", success: false }
     return { error: "Failed to update profile.", success: false }
   }
 }
@@ -84,7 +84,7 @@ export async function createUser(prevState: unknown, formData: FormData) {
   const dob = String(formData.get("dob") ?? "")
 
   if (!username || !email || !dob) {
-    return { status: false, message: "All fields are required." }
+    return { success: false, error: "All fields are required." }
   }
   try {
     // Call external endpoint or save to DB
@@ -100,6 +100,12 @@ export async function createUser(prevState: unknown, formData: FormData) {
       return {
         success: false,
         error: `Email already in use.`,
+      }
+    }
+    if (constraint === "Users_username_key" || constraint === "users_username_lower_key") {
+      return {
+        success: false,
+        error: `Username already taken.`,
       }
     }
 
@@ -141,7 +147,7 @@ export async function loginUser(prevState: unknown, formData: FormData) {
     })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setExpirationTime("1h")
+      .setExpirationTime("7d")
       .sign(secret)
 
     const cookieStore = await cookies()
@@ -150,7 +156,7 @@ export async function loginUser(prevState: unknown, formData: FormData) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60,
+      maxAge: 60 * 60 * 24 * 7, // 1 week
     })
 
     return {
