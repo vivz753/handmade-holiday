@@ -11,9 +11,9 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
   return (
     <>
       {profile && (
-        <div className="my-16">
+        <div className="pt-4">
           <span className="text-2xl">Edit Profile</span>
-          <div className="divide-y divide-red-400 rounded-2xl border p-2">
+          <div className="divide-y divide-red-400 rounded-lg border p-4">
             <form className="flex h-full justify-center" action={formAction}>
               <div className="flex flex-col gap-4">
                 <div className="group disabled flex flex-col">

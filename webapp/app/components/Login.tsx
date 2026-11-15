@@ -10,7 +10,7 @@ export const Login = () => {
   return (
     <div className="flex flex-col gap-8 rounded-lg bg-green-100 px-12 py-10 text-red-500">
       <span className="text-2xl">Existing player</span>
-      <form className="flex h-full w-[250px]" action={formAction}>
+      <form className="flex h-full" action={formAction}>
         <div className="flex flex-col gap-4">
           {/* <div className="flex flex-col">
 						<label id="username">Username</label>
@@ -27,11 +27,8 @@ export const Login = () => {
           <button className="mt-auto rounded-lg bg-red-500 p-2 text-yellow-100" type="submit" disabled={isPending}>
             {isPending ? "Loading..." : "Log In"}
           </button>
-          {state?.error ? (
-            <p style={{ color: "red" }}>{state.error}</p>
-          ) : (
-            <p style={{ color: "green" }}>User successfully logged in!</p>
-          )}
+          {state?.error && <p style={{ color: "red" }}>{state.error}</p>}
+          {state?.success && <p style={{ color: "green" }}>User successfully logged in!</p>}
         </div>
       </form>
     </div>
@@ -43,7 +40,7 @@ export const CreateAccount = () => {
   return (
     <div className="flex flex-col gap-8 rounded-lg bg-green-100 px-12 py-10 text-red-500">
       <span className="text-2xl">New player?</span>
-      <form className="flex h-full w-[250px]" action={formAction}>
+      <form className="flex h-full" action={formAction}>
         <div className="flex flex-col gap-4">
           <div className="flex flex-col">
             <label id="username">Username</label>
@@ -78,11 +75,8 @@ export const CreateAccount = () => {
           <button className="mt-8 rounded-lg bg-red-500 p-2 text-yellow-100" type="submit" disabled={isPending}>
             {isPending ? "Loading..." : "Create Account"}
           </button>
-          {state?.error ? (
-            <p style={{ color: "red" }}>{state.error}</p>
-          ) : (
-            <p style={{ color: "green" }}>User successfully created!</p>
-          )}
+          {state?.error && <p style={{ color: "red" }}>{state.error}</p>}
+          {state?.success && <p style={{ color: "green" }}>User successfully created!</p>}
         </div>
       </form>
     </div>

@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <main className="flex w-full max-w-3xl flex-1 flex-col items-center justify-between bg-yellow-50 px-16 py-32 sm:items-start">
+    <main className="flex w-full max-w-3xl flex-1 flex-col items-center justify-between bg-yellow-50 px-8 py-32 sm:items-start lg:px-16">
       <div className="flex flex-col gap-4">
         <span className="text-3xl">Handmade Holiday</span>
         <span className="text-2xl">Purpose</span>
@@ -21,7 +21,8 @@ export default function Home() {
           objects, paper
         </span>
         <span className="text-xl">Examples</span>
-        <ul>
+        <ul className="list-disc">
+          <span>3D</span>
           <li>Ceramic mug</li>
           <li>Painted figurine</li>
           <li>Felted animal plushies</li>
@@ -35,7 +36,8 @@ export default function Home() {
           <li>Soap or candle</li>
           <li>Jewelry</li>
         </ul>
-        <ul>
+        <ul className="list-disc">
+          <span>2D</span>
           <li>Painting</li>
           <li>Fan-art</li>
           <li>Greeting card</li>
@@ -48,7 +50,7 @@ export default function Home() {
           <li>CD recording</li>
         </ul>
         <span className="text-xl">Rules</span>
-        <ol>
+        <ol className="list-decimal">
           <li>Item must be functional OR serve an aesthetic purpose. Ideally both!</li>
           <li>
             Each item should have taken 2-4 hours of effort (you can enter multiple items together as one set to meet
@@ -57,10 +59,14 @@ export default function Home() {
           <li>Each entry grants you 10 tokens.</li>
         </ol>
         <span className="text-xl">What do I do with tokens?</span>
-        On the day of the event, tokens are used to play-to-win other crafts. Each person has a chance to spend a token
-        on an item they want. 1 token = 1 chance to roll a pair of dice.
-        Players will take turns rolling, and the highest cumulative score wins. Use your tokens wisely. If you
-        already claimed one item and wish to donate the rest of your tokens to another player, you may.
+        <span>
+          On the day of the event, tokens are used to play-to-win other crafts. Each person has a chance to spend a
+          token on an item they want. 1 token = 1 chance to roll a pair of dice. Players will take turns rolling, and
+          the highest cumulative score wins.
+        </span>
+        <span>
+          If you already claimed one item and wish to donate your remaining tokens to another player, you may.
+        </span>
       </div>
     </main>
   )
