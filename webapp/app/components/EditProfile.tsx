@@ -11,13 +11,13 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
   return (
     <>
       {profile && (
-        <div className="pt-4">
+        <div className="pt-4 lg:py-8">
           <span className="text-2xl">Edit Profile</span>
           <div className="divide-y divide-red-400 rounded-lg border p-4">
             <form className="flex h-full justify-center" action={formAction}>
               <div className="flex flex-col gap-4">
                 <div className="group disabled flex flex-col">
-                  <label className="group:bg-green-500" htmlFor="email">
+                  <label className="font-semibold" htmlFor="email">
                     Email
                   </label>
                   <input
@@ -31,7 +31,9 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
                   />
                 </div>
                 <div className="group flex flex-col">
-                  <label htmlFor="dob">Date of Birth</label>
+                  <label className="font-semibold" htmlFor="dob">
+                    Date of Birth
+                  </label>
                   <input
                     id="dob"
                     disabled
@@ -43,7 +45,9 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label htmlFor="username">Username</label>
+                  <label className="font-semibold" htmlFor="username">
+                    Username
+                  </label>
                   <input
                     id="username"
                     defaultValue={profile.username}
@@ -54,7 +58,9 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label htmlFor="making">Making</label>
+                  <label className="font-semibold" htmlFor="making">
+                    Making
+                  </label>
                   <span>Let everyone know what crafts they might expect from you.</span>
                   <textarea
                     id="making"
@@ -66,7 +72,9 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label htmlFor="seeking">Seeking</label>
+                  <label className="font-semibold" htmlFor="seeking">
+                    Seeking
+                  </label>
                   <span>What do you wish for? Maybe someone might make it for you!</span>
                   <textarea
                     id="seeking"
@@ -77,8 +85,10 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label htmlFor="likes">Likes</label>
-                  <span className="text-sm">List any colors, themes, mediums you particularly enjoy.</span>
+                  <label className="font-semibold" htmlFor="likes">
+                    Likes
+                  </label>
+                  <span>List any colors, themes, mediums you particularly enjoy.</span>
                   <textarea
                     id="likes"
                     defaultValue={profile.likes || ""}
@@ -88,7 +98,9 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label htmlFor="dislikes">Dislikes</label>
+                  <label className="font-semibold" htmlFor="dislikes">
+                    Dislikes
+                  </label>
                   <span>Is there anything you absolutely despise?</span>
                   <textarea
                     id="dislikes"
@@ -105,11 +117,8 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
                 >
                   {isPending ? "Loading..." : "Update Profile"}
                 </button>
-                {state?.error ? (
-                  <p style={{ color: "red" }}>{state.error}</p>
-                ) : (
-                  <p style={{ color: "green" }}>Profile successfully updated!</p>
-                )}
+                {state?.error && <p style={{ color: "red" }}>{state.error}</p>}{" "}
+                {state?.success && <p style={{ color: "green" }}>Profile successfully updated!</p>}
               </div>
             </form>
           </div>

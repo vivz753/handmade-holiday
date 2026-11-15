@@ -24,21 +24,11 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 }
 
 export async function validateUser(email: string, dob: string) {
-  try {
-    const users = await getConfidentialUsers(email)
-    if (users.length === 0) {
-      throw new Error("User not found")
-    }
+  const users = await getConfidentialUsers(email)
+  const user = users[0]
 
-    const user = users[0]
-    if (user.dob !== dob) {
-      throw new Error("Invalid date of birth")
-    }
-
-    return user
-  } catch (e) {
-    console.error(e)
-  }
+  if (!user || user.dob !== dob) return null
+  return user
 }
 
 export async function verifyAuthToken(token: string) {

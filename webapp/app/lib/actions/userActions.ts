@@ -7,6 +7,7 @@ import { validateUser, getCurrentUser } from "@lib/auth"
 import { insertUser, updateUser } from "./dataActions"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
+import { getUniqueViolation } from "@lib/types"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -94,6 +95,14 @@ export async function createUser(prevState: unknown, formData: FormData) {
   } catch (error) {
     console.error(error)
 
+    const constraint = getUniqueViolation(error)
+    if (constraint === "Users_email_key") {
+      return {
+        success: false,
+        error: `Email already in use.`,
+      }
+    }
+
     return {
       error: `Failed to create user. ${error}`,
       success: false,
@@ -121,6 +130,8 @@ export async function loginUser(prevState: unknown, formData: FormData) {
     }
 
     const user = await validateUser(email, dob)
+    if (!user) return { success: false, error: "Invalid email or date of birth." }
+
     const secret = new TextEncoder().encode(process.env.JWT_SECRET)
 
     const token = await new SignJWT({
