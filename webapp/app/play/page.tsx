@@ -40,7 +40,7 @@ const Board: React.FC<{ username: string; email: string }> = async ({ username, 
   const players = await getPublicUsers(email)
   console.log("players", players)
   return (
-    <div className="max-h-[80vh] text-sm lg:text-base pb-8">
+    <div className="pb-8 text-sm lg:text-base">
       {/* HEADER */}
       <div className="h-full divide-y divide-red-400 overflow-auto rounded-lg border">
         <div className="sticky top-0 grid w-full grid-cols-5 items-center divide-x divide-red-400 text-green-400 lg:px-2">
@@ -55,9 +55,7 @@ const Board: React.FC<{ username: string; email: string }> = async ({ username, 
           {players.map((p) => (
             <div className="grid grid-cols-5 items-center divide-x wrap-anywhere lg:px-2" key={p.username}>
               <div className="flex h-full flex-col gap-2 p-2 lg:flex-row">
-                {/* <Link href={`/u/${p.username}`}> */}
-                {p.username}
-                {/* </Link> */}
+                <Link href={`/u/${p.username}`}>{p.username}</Link>
                 {username === p.username && (
                   <Link href="/edit">
                     <MdEdit className="h-5 w-5" />

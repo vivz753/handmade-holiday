@@ -3,6 +3,7 @@ import { Suspense } from "react"
 import { getPublicUserByUsername } from "@lib/actions/dataActions" // server-only helper
 import { inputStyle, buttonStyle } from "@lib/styles"
 import clsx from "clsx"
+import Image from "next/image"
 
 const USERNAME_RE = /^[a-zA-Z0-9_]{3,20}$/
 
@@ -17,9 +18,11 @@ async function ProfileContent({ params }: { params: Promise<{ username: string }
 
   return (
     <div className="flex w-full max-w-3xl flex-1 flex-col items-center gap-10 bg-yellow-50 p-2 pt-[100px] lg:px-10">
-      <div className="mt-8 flex h-full w-full flex-row items-center gap-16 rounded-lg border border-red-500 px-16 py-8">
-        <div className="flex flex-col gap-2">
-          <span className="h-20 w-20 rounded-full bg-red-500" />
+      <div className="mt-8 flex h-full w-full flex-col items-center gap-8 rounded-lg border border-red-500 px-8 py-8 lg:flex-row lg:gap-16 lg:px-16">
+        <div className="flex flex-col items-center gap-2">
+          <span className="flex h-32 w-32 items-center justify-center rounded-full border-2 border-red-500 bg-green-200">
+            <Image alt="profile-picture" width={75} height={75} src={"/gift.svg"} className="" />
+          </span>
           <h1 className="text-2xl">{user.username}</h1>
         </div>
         <div className="flex flex-col gap-2">
