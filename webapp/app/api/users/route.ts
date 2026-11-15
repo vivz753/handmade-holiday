@@ -27,7 +27,7 @@ export async function GET(_req: NextRequest) {
   const email = _req.nextUrl.searchParams.get("email")
 
   try {
-    const users = await getPublicUsers(email)
+    const users = await getPublicUsers(email!)
     return NextResponse.json(users, { status: 200 })
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 })
@@ -63,7 +63,7 @@ export async function POST(_req: NextRequest) {
     // Parse raw JSON from request body
     const { username, email, dob } = await _req.json()
 
-    const user = await insertUser(username, email, dob)
+    const user = await insertUser({username, email, dob})
 
     return NextResponse.json({ message: "User created successfully", user }, { status: 201 })
   } catch (error) {

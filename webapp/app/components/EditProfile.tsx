@@ -108,7 +108,7 @@ export const EditProfileForm: React.FC<{ profile: User }> = ({ profile }) => {
                 {state?.error ? (
                   <p style={{ color: "red" }}>{state.error}</p>
                 ) : (
-                  <p style={{ color: "green" }}>{state.message}</p>
+                  <p style={{ color: "green" }}>Profile successfully updated!</p>
                 )}
               </div>
             </form>

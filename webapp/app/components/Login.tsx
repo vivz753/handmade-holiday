@@ -1,6 +1,6 @@
 "use client"
 import { useActionState } from "react"
-import { createUser, loginUser } from "../lib/actions/userActions"
+import { createUser, loginUser } from "@lib/actions/userActions"
 
 const inputStyle = "p-1 rounded-sm border border-red-400"
 const initialState = { error: null, success: false }
@@ -30,7 +30,7 @@ export const Login = () => {
           {state?.error ? (
             <p style={{ color: "red" }}>{state.error}</p>
           ) : (
-            <p style={{ color: "green" }}>{state.message}</p>
+            <p style={{ color: "green" }}>User successfully logged in!</p>
           )}
         </div>
       </form>
@@ -81,7 +81,7 @@ export const CreateAccount = () => {
           {state?.error ? (
             <p style={{ color: "red" }}>{state.error}</p>
           ) : (
-            <p style={{ color: "green" }}>{state.message}</p>
+            <p style={{ color: "green" }}>User successfully created!</p>
           )}
         </div>
       </form>

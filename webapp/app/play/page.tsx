@@ -36,7 +36,7 @@ export const Dashboard = async () => {
   )
 }
 
-const Board = async ({ username }) => {
+const Board: React.FC<{ username: string }> = async ({ username }) => {
   const players = await getPublicUsers()
   console.log("players", players)
   return (

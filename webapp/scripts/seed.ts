@@ -1,5 +1,5 @@
 
-import { getClient } from "@/app/lib/server/db"
+import { getClient } from "@lib/server/db"
 
 async function seed() {
 	

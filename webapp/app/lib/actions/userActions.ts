@@ -75,7 +75,7 @@ export async function editUser(prevState: unknown, formData: FormData) {
   }
 }
 
-export async function createUser(prevState: any, formData: FormData) {
+export async function createUser(prevState: unknown, formData: FormData) {
   const username = String(formData.get("username") ?? "").trim()
   const email = String(formData.get("email") ?? "")
     .trim()
@@ -90,12 +90,13 @@ export async function createUser(prevState: any, formData: FormData) {
     await insertUser({ username, email, dob })
 
     // Return success status and data
-    return { message: "User successfully created.", status: true }
+    return { success: true, error: null }
   } catch (error) {
     console.error(error)
 
     return {
       error: `Failed to create user. ${error}`,
+      success: false,
     }
   }
 }
@@ -106,7 +107,7 @@ export async function logoutUser() {
   redirect("/play")
 }
 
-export async function loginUser(prevState: any, formData: FormData) {
+export async function loginUser(prevState: unknown, formData: FormData) {
   try {
     const email = formData.get("email")?.toString()
     const dob = formData.get("dob")?.toString()
@@ -142,14 +143,14 @@ export async function loginUser(prevState: any, formData: FormData) {
     })
 
     return {
-      status: true,
-      message: "User logged in successfully.",
-      user,
+      success: true,
+      error: null,
     }
   } catch (error) {
     console.error(error)
 
     return {
+      success: false,
       error: `Failed to login user. ${error}`,
     }
   }
