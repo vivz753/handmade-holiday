@@ -43,7 +43,7 @@ const Board: React.FC<{ username: string; email: string }> = async ({ username, 
     <div className="max-h-[80vh] text-sm lg:text-base">
       {/* HEADER */}
       <div className="h-full divide-y divide-red-400 overflow-auto rounded-lg border">
-        <div className="sticky top-0 grid w-full grid-cols-5 items-center divide-x divide-red-400 text-green-300 lg:px-2">
+        <div className="sticky top-0 grid w-full grid-cols-5 items-center divide-x divide-red-400 text-green-400 lg:px-2">
           <div className="p-1 lg:p-2">Player</div>
           <div className="p-1 lg:p-2">Making</div>
           <div className="p-1 lg:p-2">Seeking</div>
