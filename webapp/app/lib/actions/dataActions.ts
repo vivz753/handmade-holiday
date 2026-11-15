@@ -59,6 +59,16 @@ export const getConfidentialUserByEmail = async (email: string) => {
   return result.rows
 }
 
+export const getPublicUserByUsername = async (username: string) => {
+  const result = await pool.query(
+    `SELECT username, making, seeking, likes, dislikes
+     FROM "Users"
+     WHERE lower(username) = lower($1)`,
+    [username],
+  )
+  return result.rows[0] ?? null
+}
+
 // TODO: If your table has an id column, use WHERE id = $8 and put id in the JWT. Keying on email breaks other active sessions the moment someone changes their email.
 export async function updateUser(currentEmail: string, p: Profile) {
   const result = await pool.query(

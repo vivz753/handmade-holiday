@@ -55,7 +55,9 @@ const Board: React.FC<{ username: string; email: string }> = async ({ username, 
           {players.map((p) => (
             <div className="grid grid-cols-5 items-center divide-x wrap-anywhere lg:px-2" key={p.username}>
               <div className="flex h-full flex-col gap-2 p-2 lg:flex-row">
+                {/* <Link href={`/u/${p.username}`}> */}
                 {p.username}
+                {/* </Link> */}
                 {username === p.username && (
                   <Link href="/edit">
                     <MdEdit className="h-5 w-5" />
