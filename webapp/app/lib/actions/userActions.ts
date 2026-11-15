@@ -7,7 +7,7 @@ import { validateUser, getCurrentUser } from "@lib/auth"
 import { insertUser, updateUser } from "./dataActions"
 import { redirect } from "next/navigation"
 import { revalidatePath } from "next/cache"
-import { getUniqueViolation } from "@lib/types"
+import { getUniqueViolation } from "@lib/helpers"
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,

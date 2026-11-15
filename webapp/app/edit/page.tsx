@@ -8,7 +8,7 @@ import { getConfidentialUserByEmail } from "@lib/actions/dataActions"
 export default async function Profile() {
   return (
     <div className="flex w-full max-w-3xl flex-1 flex-row items-center justify-center overflow-y-auto bg-yellow-50 p-4 pt-[100px] lg:px-16">
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading variant={false} />}>
         <EditProfile />
       </Suspense>
     </div>

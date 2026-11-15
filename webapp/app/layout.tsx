@@ -36,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
 const Header = async () => {
   return (
-    <nav className="absolute top-0 flex h-[100px] w-full flex-row items-center gap-8 bg-red-400 p-8 md:px-20">
+    <nav className="absolute top-0 flex h-[100px] w-full flex-row items-center gap-8 bg-red-500 p-8 md:px-20">
       <Link href="/">
         <span className="text-yellow-50 hover:text-green-100">FAQ</span>
       </Link>

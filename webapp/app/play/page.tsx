@@ -6,7 +6,7 @@ import { getPublicUsers } from "@lib/actions/dataActions"
 import { MdEdit } from "react-icons/md"
 import Link from "next/link"
 
-export default async function Play() {
+export default function Play() {
   return (
     <div className="flex w-full max-w-3xl flex-1 flex-row justify-center gap-10 bg-yellow-50 p-2 pt-[100px] lg:px-10">
       <Suspense fallback={<Loading />}>
